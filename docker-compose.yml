@@ -13,13 +13,14 @@ services:
       - "9002:9002"
     networks:
       - default
-  isp-routing-service:
-    image: "ghcr.io/txix-open/isp-routing-service:latest"
-    container_name: "isp-routing-service"
+  isp-router-service:
+    image: "ghcr.io/txix-open/isp-router-service:latest"
+    container_name: "isp-router-service"
     restart: unless-stopped
     environment:
       configServiceAddress.ip: isp-config-service
-      grpcOuterAddress.ip: isp-routing-service
+      grpcOuterAddress.ip: isp-router-service
+      moduleName: isp-router-service
       logFile.path: ""
     depends_on:
       - isp-config-service
@@ -32,12 +33,15 @@ services:
     environment:
       configServiceAddress.ip: isp-config-service
       grpcOuterAddress.ip: isp-gate-service
+      locations.[0].pathPrefix: /api
+      locations.[0].protocol: http
+      locations.[0].targetModule: isp-router-service
       logFile.path: ""
     ports:
       - "9003:9003"
     depends_on:
       - isp-config-service
-      - isp-routing-service
+      - isp-router-service
     networks:
       - default
   isp-system-service:
@@ -101,7 +105,7 @@ services:
     networks:
       - default
   db:
-    image: postgres:16-alpine
+    image: postgres:alpine
     container_name: db
     restart: unless-stopped
     environment:
