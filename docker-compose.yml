@@ -37,6 +37,7 @@ services:
       locations.[0].protocol: http
       locations.[0].targetModule: isp-router-service
       logFile.path: ""
+      adminServiceName: isp-admin-service
     ports:
       - "9003:9003"
     depends_on:
@@ -69,13 +70,13 @@ services:
       - isp-config-service
     networks:
       - default
-  msp-admin-service:
-    image: "ghcr.io/txix-open/msp-admin-service:latest"
-    container_name: "msp-admin-service"
+  isp-admin-service:
+    image: "ghcr.io/txix-open/isp-admin-service:latest"
+    container_name: "isp-admin-service"
     restart: unless-stopped
     environment:
       configServiceAddress.ip: isp-config-service
-      grpcOuterAddress.ip: msp-admin-service
+      grpcOuterAddress.ip: isp-admin-service
       logFile.path: ""
       remoteConfigOverride: |
         {
@@ -100,7 +101,7 @@ services:
     environment:
       APP_TOKEN: 74f3bc21-3dac-4532-9674-be4453732013
     depends_on:
-      - msp-admin-service
+      - isp-admin-service
       - isp-gate-service
     networks:
       - default
