@@ -9,7 +9,7 @@ docker compose up -d
 
 Выставить права на каталог `isp-config-service`
 ```
-sudo chmod -R 777 ./isp-config-serivce
+sudo chmod -R 777 ./isp-config-service
 ```
 
 Перезапустить контейнеры
